@@ -3,9 +3,10 @@ package com.example.notebook
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.*
-import android.widget.RadioGroup.OnCheckedChangeListener
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.itemrcv.view.*
 import java.text.SimpleDateFormat
@@ -14,8 +15,6 @@ import kotlin.collections.ArrayList
 
 
 class AdapterMisson : RecyclerView.Adapter<AdapterMisson.ItemHolder> {
-
-
 
     var list : ArrayList<EntityMission>
     var context: Context
@@ -80,6 +79,7 @@ class AdapterMisson : RecyclerView.Adapter<AdapterMisson.ItemHolder> {
 
         holder.imgCheck.setOnClickListener {
             var missionDao = missionDB.callDao()
+
             missionDao.updateStateCheckDone("true", item.id!!)
 
             val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
@@ -92,9 +92,6 @@ class AdapterMisson : RecyclerView.Adapter<AdapterMisson.ItemHolder> {
             reloadListListener!!.onReload(true)
 
 
-
-
-
             /**missionDao = missionDB!!.callDao()
             missionDao.deleteMission(list[position].id!!)
             list.clear()
@@ -103,6 +100,35 @@ class AdapterMisson : RecyclerView.Adapter<AdapterMisson.ItemHolder> {
             Toast.makeText(context, "Thành công", Toast.LENGTH_SHORT ).show()**/
 
         }
+        holder.itemView.setOnClickListener(View.OnClickListener {
+            Toast.makeText(context, "Minh Duy", Toast.LENGTH_SHORT).show()
+        })
+
+        holder.itemView.setOnLongClickListener(View.OnLongClickListener {
+            val aler = AlertDialog.Builder(context)
+            aler.setTitle("Thông báo")
+            aler.setIcon(R.mipmap.ic_launcher)
+            aler.setMessage("bạn muốn xóa hay không ?")
+            aler.setPositiveButton("có") { dialog, which ->
+
+                var misionDao = missionDB.callDao()
+                misionDao.deleteMission(list[position].id!!)
+                list.remove(list[position])
+                //misionDao.getAllMission()
+                reloadListt(list)
+
+                /*missionDao = missionDB.callDao()
+                missionDao.deleteMission(item.id!!)
+                list.clear()
+                missionDao.getAllMission()
+                reloadListt(list)*/
+            }
+            aler.setNegativeButton(
+                "Không"
+            ) { dialog, which -> }
+            aler.show()
+            true
+        })
 
     }
     /** t note lại cho m đó dime m**/
@@ -110,8 +136,8 @@ class AdapterMisson : RecyclerView.Adapter<AdapterMisson.ItemHolder> {
     override fun getItemCount(): Int {
         return  list.size
     }
-    fun reloadListt(list: ArrayList<EntityMission>) {
-            this.list = list
+    fun reloadListt(listt: ArrayList<EntityMission>) {
+            this.list = listt
             notifyDataSetChanged()
 
     }

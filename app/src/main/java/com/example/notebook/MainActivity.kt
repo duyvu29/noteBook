@@ -65,26 +65,28 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             })
-
         }
         //  getAllData()
         //setRcvMisson()
         // recyclerView thứ 2
-
     }
-
     private fun mapping() {
         rcvMisson = findViewById(R.id.rcvMisson)
         rcvComplete = findViewById(R.id.rcvComplete)
         linearPress = findViewById(R.id.linearLyoutAdd)
     }
-
     private fun setRcvMisson() {
         MainAdapter = AdapterMisson(listMission, this, db)
         val manager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rcvMisson.setHasFixedSize(true)
         rcvMisson.layoutManager = manager
         rcvMisson.adapter = MainAdapter
+
+       /* missionDao = db!!.callDao()
+        missionDao.getAllMission()
+        listMission.clear()
+        MainAdapter.reloadListt(listMission)*/
+
 
         MainAdapter.setOnReloadListListener(object : AdapterMisson.ReloadListListener {
             @RequiresApi(Build.VERSION_CODES.O)
@@ -114,9 +116,14 @@ class MainActivity : AppCompatActivity() {
     private fun setRcvComplete() {
 //        list2 = ArrayList()
 //        list2.add(dataMission(R.drawable.ic_baseline_check_circle_24,"",R.drawable.ic_baseline_star_24))
-        doneAdapter = adaperRcv2(this, listDone)
+        doneAdapter = adaperRcv2(this, listDone,db)
         rcvComplete.adapter = doneAdapter
         rcvComplete.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        /*listDone.clear()
+        getAllData()
+        doneAdapter.reloadList(listDone)*/
+
 
     }
 
@@ -142,7 +149,8 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getAllMissionDone() {
 //        listDone = ArrayList()
-        missionDao = db!!.callDao()
+         missionDao = db!!.callDao()
+        //var missionDao = missionDao
         listDone = missionDao.getAllMissionDone() as ArrayList<EntityMission>
         if (listDone.size >= 2) {
             bubbleSort(listDone)

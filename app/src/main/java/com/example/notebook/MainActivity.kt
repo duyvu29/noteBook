@@ -2,6 +2,8 @@ package com.example.notebook
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var rcvComplete: RecyclerView
 
     lateinit var linearPress: LinearLayout
+    lateinit var keybroad   : ImageView
 
     var listMission: ArrayList<EntityMission> = ArrayList()
     var listDone: ArrayList<EntityMission> = ArrayList()
@@ -28,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var missionDao: DaoMission
 
     lateinit var doneAdapter: adaperRcv2
+
+    var count : Int = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,11 +74,29 @@ class MainActivity : AppCompatActivity() {
         //  getAllData()
         //setRcvMisson()
         // recyclerView thứ 2
+
+        // sự kiện ẩn recyclerview Done
+        keybroad.setOnClickListener(View.OnClickListener {
+
+            count ++
+            if (count== 1){
+                keybroad.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                rcvComplete.visibility = View.VISIBLE
+            }
+            if (count==2){
+                keybroad.setImageResource(R.drawable.explane_less)
+                rcvComplete.visibility = View.GONE
+                count = 0
+            }
+        })
+
+
     }
     private fun mapping() {
         rcvMisson = findViewById(R.id.rcvMisson)
         rcvComplete = findViewById(R.id.rcvComplete)
         linearPress = findViewById(R.id.linearLyoutAdd)
+        keybroad    = findViewById(R.id.imgKeybroad)
     }
     private fun setRcvMisson() {
         MainAdapter = AdapterMisson(listMission, this, db)
@@ -126,8 +149,6 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
-
     private fun initRoomDB() {
         // StaffDatabase duoc khoi tao 1 lan va dung o moi class trong app
         db = Room.databaseBuilder(applicationContext, DataBaseApp::class.java, "staff-db")
